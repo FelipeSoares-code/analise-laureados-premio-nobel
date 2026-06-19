@@ -1,5 +1,7 @@
+import requests, pandas as pd, kagglehub
 from bs4 import BeautifulSoup
-import requests, pandas as pd
+from kagglehub import KaggleDatasetAdapter
+from pathlib import Path
 
 def extrairTabWiki(url):
     headers = {
@@ -21,5 +23,19 @@ def extrairTabWiki(url):
         dados.append([c.get_text(" ", strip=True) for c in colunas])
 
     df = pd.DataFrame(dados[1:], columns=dados[0])
+
+    return df
+
+def dfNacionalidades():
+    path = Path(
+        kagglehub.dataset_download("joebeachcapital/nobel-prize")
+    )
+
+    arquivo = path / "nobel-prize-laureates.csv"
+
+    df = pd.read_csv(
+        arquivo,
+        sep=";"
+    )
 
     return df
