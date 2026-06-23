@@ -1,7 +1,7 @@
 import funcoes as fn, numpy as np, pandas as pd
 
-def nacionalidades():
-    nacionalidades = fn.extrairNacionalidades()
+def laureados():
+    df = fn.extrairDfNobel()
 
     # Index(['Id', 'Firstname', 'Surname', 'Born', 'Died', 'Born country',
     #    'Born country code', 'Born city', 'Died country', 'Died country code',
@@ -10,7 +10,7 @@ def nacionalidades():
     #    'Organization country', 'Geo Shape', 'Geo Point 2D'],
     #   dtype='str')
 
-    nacionalidades.drop(
+    df.drop(
         [
             'Born city','Died city',
             'Overall motivation', 'Motivation',
@@ -19,7 +19,7 @@ def nacionalidades():
         axis='columns', inplace=True
     )
 
-    nacionalidades.rename(columns={
+    df.rename(columns={
         "Id" : "id",
         "Firstname" : "nome",
         "Surname" : "sobrenome",
@@ -30,39 +30,36 @@ def nacionalidades():
         "Died country" : "pais_morte",
         "Died country code" : "cod_pais_morte",
         "Gender" : "genero",
-        "Year" : "ano_venc",
+        "Year" : "ano",
         "Category" : "categoria",
         "Organization name" : "nome_org",
         "Organization country" : "pais_org"
     }, inplace=True)
 
-    return nacionalidades
+    df = df.set_index("id").reset_index()
 
-def laureados():
-    # Index(['Ano', 'Física [ 21 ]', 'Química [ 22 ]',
-    #    'Fisiologia ou Medicina [ 23 ]', 'Literatura [ 24 ]', 'Paz [ 25 ]',
-    #    'Economia (Prêmio Sveriges Riksbank) [ 26 ]'],
-    #   dtype='str')
+    df.dropna(how="all", inplace=True)
 
-    df = fn.extrairTabWiki("https://pt.wikipedia.org/wiki/Laureados_com_o_Nobel")
+    df["nascimento"] = pd.to_datetime(df["nascimento"])
 
-    df = df.replace(["Não foi atribuído", "Não foi atribuído[nota 4]", "—"], np.nan)
-
-    df.rename(columns={
-        "Ano" : "ano",
-        "Física [ 21 ]" : "fisica",
-        "Química [ 22 ]" : "quimica",
-        "Fisiologia ou Medicina [ 23 ]" : "medicina",
-        "Literatura [ 24 ]" : "literatura",
-        "Paz [ 25 ]" : "paz",
-        "Economia (Prêmio Sveriges Riksbank) [ 26 ]" : "economia"
-    }, inplace=True)
-
-    df = df.iloc[:-1] #todas linhas permanecem menos a ultima
-
-    df["ano"] = pd.to_numeric(df["ano"], errors="coerce").astype(int)
+    df["idade_premio"] = df["ano"] - df["nascimento"].dt.year
 
     return df
+
+def nobelPorNac(db):
+    df = (
+        db
+        .groupby("pais_nasc")
+        .size()
+        .reset_index(name="qtd_nobel")
+    )
+
+    df.rename(columns={
+        "pais_nasc" : "pais"
+    }, inplace=True)
+
+    return df
+    
 
     
 

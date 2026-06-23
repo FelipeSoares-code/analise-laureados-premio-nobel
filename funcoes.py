@@ -26,7 +26,7 @@ def extrairTabWiki(url):
 
     return df
 
-def extrairNacionalidades():
+def extrairDfNobel():
     path = Path(
         kagglehub.dataset_download("joebeachcapital/nobel-prize")
     )
@@ -36,6 +36,18 @@ def extrairNacionalidades():
     df = pd.read_csv(
         arquivo,
         sep=";"
+    )
+
+    return df
+
+def extrairDemocracias():
+    headers = {
+        "User-Agent": "Mozilla/5.0"
+    }
+
+    df = pd.read_csv(
+        "https://ourworldindata.org/grapher/democracy-index-eiu.csv?v=1&csvType=full&useColumnShortNames=false",
+        storage_options=headers
     )
 
     return df

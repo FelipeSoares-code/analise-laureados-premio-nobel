@@ -7,7 +7,7 @@ o projeto tem como objetivo analisar os laureados com o Prêmio Nobel.
 ## dados desejados
 - vencedores por categoria em cada ano: https://pt.wikipedia.org/wiki/Laureados_com_o_Nobel#1930
 
-- nacionalidade do vencedor (país de nascença e de morte): https://www.kaggle.com/datasets/joebeachcapital/nobel-prize/data
+- ddf laureados: https://www.kaggle.com/datasets/joebeachcapital/nobel-prize/data
 
 - mulheres vencedoras do prêmio nobel: https://pt.wikipedia.org/wiki/Lista_de_mulheres_laureadas_com_o_Nobel
 
