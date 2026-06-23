@@ -26,7 +26,7 @@ def extrairTabWiki(url):
 
     return df
 
-def dfNacionalidades():
+def extrairNacionalidades():
     path = Path(
         kagglehub.dataset_download("joebeachcapital/nobel-prize")
     )

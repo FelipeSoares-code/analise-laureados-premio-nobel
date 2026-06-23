@@ -1,5 +1,5 @@
-import funcoes as fn
+import funcoes as fn, organizar as orgn
 
-laureados = fn.extrairTabWiki("https://pt.wikipedia.org/wiki/Laureados_com_o_Nobel")
+laureados = orgn.laureados
 
-fn.dfNacionalidades()
+nacionalidades = orgn.nacionalidades()
