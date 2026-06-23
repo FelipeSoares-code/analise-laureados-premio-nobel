@@ -41,13 +41,14 @@ def extrairDfNobel():
     return df
 
 def extrairDemocracias():
-    headers = {
-        "User-Agent": "Mozilla/5.0"
-    }
+    df = pd.read_excel("dados_democracia.xlsx", sheet_name="FIW13-21")
 
-    df = pd.read_csv(
-        "https://ourworldindata.org/grapher/democracy-index-eiu.csv?v=1&csvType=full&useColumnShortNames=false",
-        storage_options=headers
-    )
+    df = df[["Country/Territory", "Edition", "Total"]]
+
+    df.rename(columns={
+        "Country/Territory" : "pais",
+        "Edition" : "ano",
+        "Total" : "pontos"
+    }, inplace=True)
 
     return df
