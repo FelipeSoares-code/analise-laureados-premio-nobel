@@ -59,6 +59,21 @@ def nobelPorNac(db):
     }, inplace=True)
 
     return df
+
+def democracias():
+    df = fn.extrairDemocracias()
+
+    df = df[["Country/Territory", "Edition", "Total"]]
+
+    df.rename(columns={
+        "Country/Territory" : "pais",
+        "Edition" : "ano",
+        "Total" : "pontos"
+    }, inplace=True)
+
+    df = df.sort_values(["ano", "pais"]).reset_index()
+
+    return df
     
 
     

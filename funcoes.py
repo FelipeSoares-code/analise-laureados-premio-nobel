@@ -43,12 +43,4 @@ def extrairDfNobel():
 def extrairDemocracias():
     df = pd.read_excel("dados_democracia.xlsx", sheet_name="FIW13-21")
 
-    df = df[["Country/Territory", "Edition", "Total"]]
-
-    df.rename(columns={
-        "Country/Territory" : "pais",
-        "Edition" : "ano",
-        "Total" : "pontos"
-    }, inplace=True)
-
     return df
