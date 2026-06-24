@@ -3,3 +3,7 @@ __pycache__/
 *.ipynb
 *.csv
 *.geojson
+.venv/
+venv/
+.ipynb_checkpoints/
+data/
