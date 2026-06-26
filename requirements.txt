@@ -4,3 +4,7 @@ openpyxl>=3.1
 requests>=2.32
 kagglehub>=1.0
 kaggle>=2.2
+matplotlib
+seaborn
+wbdata
+

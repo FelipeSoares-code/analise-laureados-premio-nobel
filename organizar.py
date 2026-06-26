@@ -47,6 +47,7 @@ def laureados():
     return df
 
 def nobelPorNac(db):
+    db = pd.DataFrame(db)
     df = (
         db
         .groupby("pais_nasc")
