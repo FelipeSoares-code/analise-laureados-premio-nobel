@@ -44,6 +44,8 @@ def laureados():
 
     df["idade_premio"] = df["ano"] - df["nascimento"].dt.year
 
+    df["decada"] = (df["ano"] // 10) * 10
+
     return df
 
 def nobelPorNac(db):
@@ -75,6 +77,60 @@ def democracias():
     df = df.sort_values(["ano", "pais"]).reset_index()
 
     return df
+
+def mulheresPorCategoria(df):
+    dfMulheres = df.query("genero == 'female'")
+
+    total = (
+        df.groupby(["decada", "categoria"])
+            .size()
+            .rename("total")
+    )
+
+    mulheres = (
+        dfMulheres.groupby(["decada", "categoria"])
+            .size()
+            .rename("mulheres")
+    )
+
+    participacao = pd.concat([total, mulheres], axis=1)
+
+    participacao["mulheres"] = participacao["mulheres"].fillna(0)
+
+    participacao["percentual"] = (
+        participacao["mulheres"] /
+        participacao["total"] * 100
+    )
+
+    return participacao
+
+def mulheresTotal(df):
+    dfMulheres = df.query("genero == 'female'")
+
+    total = (
+        df.groupby("decada")
+            .size()
+            .rename("total")
+    )
+
+    mulheres = (
+        dfMulheres.groupby("decada")
+            .size()
+            .rename("mulheres")
+    )
+
+    participacao = pd.concat([total, mulheres], axis=1)
+
+    participacao = participacao.reset_index()
+
+    participacao["mulheres"] = participacao["mulheres"].fillna(0)
+
+    participacao["percentual"] = (
+        participacao["mulheres"] /
+        participacao["total"] * 100
+    )
+
+    return participacao
     
 
     

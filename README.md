@@ -21,7 +21,7 @@ idade quando venceu
 pais
 região global (oriente médio, europa, américa do norte, etc)
 
-- Evolução da participação feminina
+- Evolução da participação feminina (grafico de linha, cluster com categorias e grafico de colunas comparando com homans)
 
 - Nobel per capita
 
