@@ -25,23 +25,24 @@ def correlDemocrNobel(df):
     plt.show()
 
 def evolucaoMulheresCateg(df):
-    plt.figure(figsize=(10, 6))
-
-    sns.scatterplot(
-        data=df,
-        x="decada",   
-        y="percentual",       
-        size="mulheres",          
-        sizes=(50, 300),
-        hue="categoria",
-        legend=False             
+    heatmap = df.pivot(
+        index="categoria",
+        columns="decada",
+        values="percentual"
     )
 
-    plt.title("Evolução porcentagem de mulheres vencedoras do nobel")
+    plt.figure(figsize=(12,4))
+
+    sns.heatmap(
+        heatmap,
+        annot=True,
+        cmap="Blues",
+        fmt=".1f"
+    )
+
     plt.xlabel("Década")
-    plt.ylabel("Quantidade de mulheres vencedoras (%)")
-    plt.tight_layout()
-    plt.show()
+    plt.ylabel("Categoria")
+    plt.title("Participação feminina (%) por categoria")
 
 def evolucaoTotalMulheres(df):
     plt.figure(figsize=(12,6))

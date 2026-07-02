@@ -46,6 +46,17 @@ def laureados():
 
     df["decada"] = (df["ano"] // 10) * 10
 
+    traducao = {
+        "Physics": "Física",
+        "Chemistry": "Química",
+        "Medicine": "Medicina",
+        "Literature": "Literatura",
+        "Peace": "Paz",
+        "Economics": "Economia"
+    }
+
+    df["categoria"] = df["categoria"].replace(traducao)
+
     return df
 
 def nobelPorNac(db):
