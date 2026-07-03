@@ -42,7 +42,7 @@ def extrairDfNobel():
     return df
 
 def extrairDemocracias():
-    df = pd.read_excel("dados_democracia.xlsx", sheet_name="FIW13-21")
+    df = pd.read_excel("dados/dados_democracia.xlsx", sheet_name="FIW13-21")
 
     return df
 
