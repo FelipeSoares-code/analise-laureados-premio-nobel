@@ -89,6 +89,28 @@ def correlDemocrNobel(laureados, dadosDemocracia, populacao):
 
     return df
 
+def correlIdhNobel(laureados, idh):
+    laureados  = pd.DataFrame(laureados)
+    idh = pd.DataFrame(idh)
+
+    laureados_filtro = laureados.query(f"ano.str in {idh.columns.tolist()}").copy()
+
+    laureados_filtro.rename(columns={"pais_nasc" : "pais"}, inplace=True)
+
+    laureados_filtro["pais"] = laureados_filtro["pais"].replace({
+        "USA": "United States",
+        "the Netherlands": "Netherlands",
+        "USSR (now Russia)": "Russia",
+        "British Mandate of Palestine (now Israel)": "Israel",
+        "Belgian Congo (now Democratic Republic of the Congo)": "Congo (Kinshasa)",
+        "Scotland": "United Kingdom"
+    })
+
+    nobelPorAno = (
+        laureados_filtro
+        .groupby(["pais", "ano"])
+    )
+
 def extrairPopulacao():
     indicadores = {
         "SP.POP.TOTL": "populacao"

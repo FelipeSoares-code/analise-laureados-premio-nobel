@@ -143,6 +143,20 @@ def mulheresTotal(df):
 
     return participacao
     
+def idh():
+    df = pd.read_excel("dados/dados_idh.xlsx", header=4)
+
+    df = df.iloc[1:201, :18].reset_index(drop=True)
+    df = df.dropna(axis=1, how='all')
+    df = df[~df["Country"].str.contains("development", case=False, na=False)]
+    df.replace("..", pd.NA, inplace=True)
+
+    df.rename(columns={
+        "Country" : "pais",
+        "HDI rank" : "rank_idh"
+    }, inplace=True)
+
+    return df
 
     
 
