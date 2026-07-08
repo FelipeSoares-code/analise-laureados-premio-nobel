@@ -90,14 +90,12 @@ def correlDemocrNobel(laureados, dadosDemocracia, populacao):
     return df
 
 def correlIdhNobel(laureados, idh):
-    laureados  = pd.DataFrame(laureados)
+    laureados = pd.DataFrame(laureados)
     idh = pd.DataFrame(idh)
 
-    laureados_filtro = laureados.query(f"ano.str in {idh.columns.tolist()}").copy()
+    laureados.rename(columns={"pais_nasc": "pais"}, inplace=True)
 
-    laureados_filtro.rename(columns={"pais_nasc" : "pais"}, inplace=True)
-
-    laureados_filtro["pais"] = laureados_filtro["pais"].replace({
+    laureados["pais"] = laureados["pais"].replace({
         "USA": "United States",
         "the Netherlands": "Netherlands",
         "USSR (now Russia)": "Russia",
@@ -106,10 +104,31 @@ def correlIdhNobel(laureados, idh):
         "Scotland": "United Kingdom"
     })
 
-    nobelPorAno = (
-        laureados_filtro
-        .groupby(["pais", "ano"])
+    idh = (
+        idh[["pais", 2023]]
+        .rename(columns={2023: "idh"})
+        .copy()
     )
+
+    idh["idh"] = pd.to_numeric(idh["idh"], errors="coerce")
+    idh = idh.dropna(subset=["idh"])
+
+    nobelPorPais = (
+        laureados
+        .groupby("pais")
+        .size()
+        .reset_index(name="premios")
+    )
+
+    df = idh.merge(
+        nobelPorPais,
+        on="pais",
+        how="left"
+    )
+
+    df["premios"] = df["premios"].fillna(0).astype(int)
+
+    return df
 
 def extrairPopulacao():
     indicadores = {

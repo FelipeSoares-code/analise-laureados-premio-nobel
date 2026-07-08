@@ -24,6 +24,23 @@ def correlDemocrNobel(df):
     plt.tight_layout()
     plt.show()
 
+def correlIdhNobel(df):
+    plt.figure(figsize=(10, 6))
+
+    plt.scatter(
+        df["idh"],
+        df["premios"],
+        alpha=0.7
+    )
+
+    plt.xlabel("IDH (2023)")
+    plt.ylabel("Total de laureados com Nobel")
+    plt.title("IDH x Total de laureados com Nobel por país")
+
+    plt.grid(alpha=0.3)
+    plt.tight_layout()
+    plt.show()
+
 def evolucaoMulheresCateg(df):
     heatmap = df.pivot(
         index="categoria",
