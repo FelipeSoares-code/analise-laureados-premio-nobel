@@ -29,13 +29,30 @@ def correlIdhNobel(df):
 
     plt.scatter(
         df["idh"],
-        df["premios"],
+        df["premios_per_capita"],
         alpha=0.7
     )
 
     plt.xlabel("IDH (2023)")
-    plt.ylabel("Total de laureados com Nobel")
-    plt.title("IDH x Total de laureados com Nobel por país")
+    plt.ylabel("Prêmios Nobel per capita")
+    plt.title("IDH x Prêmios Nobel per capita por país")
+
+    plt.grid(alpha=0.3)
+    plt.tight_layout()
+    plt.show()
+
+def correlPD_Nobel(df):
+    plt.figure(figsize=(10, 6))
+
+    plt.scatter(
+        df["pd"],
+        df["premios_per_capita"],
+        alpha=0.7
+    )
+
+    plt.xlabel("Investimento em P&D (% do PIB)")
+    plt.ylabel("Prêmios Nobel per capita")
+    plt.title("Investimento em P&D x Prêmios Nobel per capita por país")
 
     plt.grid(alpha=0.3)
     plt.tight_layout()

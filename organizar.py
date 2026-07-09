@@ -158,6 +158,20 @@ def idh():
 
     return df
 
+def pesquisaEDesenvolvimento():
+    df = pd.read_csv("dados/dados_P&D.csv", sep=",", skiprows=4)
+
+    df = df.drop(['Indicator Name', 'Indicator Code'], axis=1)
+    df = df.dropna(subset=['Country Name'])
+    df = df.dropna(axis=1, how='all')
+
+    df.rename(columns={
+        "Country Name" : "pais",
+        "Country Code" : "cod_pais"
+    }, inplace=True)
+
+    return df
+
     
 
 

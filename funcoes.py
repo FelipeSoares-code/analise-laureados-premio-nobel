@@ -89,7 +89,7 @@ def correlDemocrNobel(laureados, dadosDemocracia, populacao):
 
     return df
 
-def correlIdhNobel(laureados, idh):
+def correlIdhNobel(laureados, idh, populacao):
     laureados = pd.DataFrame(laureados)
     idh = pd.DataFrame(idh)
 
@@ -128,6 +128,61 @@ def correlIdhNobel(laureados, idh):
 
     df["premios"] = df["premios"].fillna(0).astype(int)
 
+    df = df.merge(
+        populacao,
+        on="pais",
+        how="left"
+    )
+
+    df["premios_per_capita"] = df["premios"] / df["populacao"]
+
+    return df
+
+def correlPD_Nobel(laureados, pd_df, populacao):
+    laureados = pd.DataFrame(laureados)
+    pd_df = pd.DataFrame(pd_df)
+
+    laureados.rename(columns={"pais_nasc": "pais"}, inplace=True)
+
+    laureados["pais"] = laureados["pais"].replace({
+        "USA": "United States",
+        "the Netherlands": "Netherlands",
+        "USSR (now Russia)": "Russia",
+        "British Mandate of Palestine (now Israel)": "Israel",
+        "Belgian Congo (now Democratic Republic of the Congo)": "Congo (Kinshasa)",
+        "Scotland": "United Kingdom"
+    })
+
+    nobelPorPais = (
+        laureados
+        .groupby("pais")
+        .size()
+        .reset_index(name="premios")
+    )
+
+    anos = [str(ano) for ano in range(1996, 2025)]
+    pd_df = pd_df[["pais"] + anos]
+
+    pd_df["pd"] = pd_df[anos].ffill(axis=1).iloc[:, -1]
+
+    pd_df = pd_df[["pais", "pd"]]
+
+    pd_df = pd_df.dropna()
+
+    df = pd_df.merge(
+        nobelPorPais,
+        on="pais",
+        how="left"
+    )
+
+    df = df.merge(
+        populacao,
+        on="pais",
+        how="left"
+    )
+
+    df["premios_per_capita"] = df["premios"] / df["populacao"]
+    
     return df
 
 def extrairPopulacao():
