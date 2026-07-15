@@ -7,4 +7,5 @@ kaggle>=2.2
 matplotlib
 seaborn
 wbdata
+streamlit
 
