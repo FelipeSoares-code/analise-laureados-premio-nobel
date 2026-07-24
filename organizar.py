@@ -57,6 +57,8 @@ def laureados():
 
     df["categoria"] = df["categoria"].replace(traducao)
 
+    df["nome_completo"] = df['nome'] + " " + df["sobrenome"]
+
     return df
 
 def nobelPorNac(db):
@@ -90,6 +92,7 @@ def democracias():
     return df
 
 def mulheresPorCategoria(df):
+    df = pd.DataFrame(df)
     dfMulheres = df.query("genero == 'female'")
 
     total = (
@@ -106,6 +109,8 @@ def mulheresPorCategoria(df):
 
     participacao = pd.concat([total, mulheres], axis=1)
 
+    participacao = participacao.reset_index()
+
     participacao["mulheres"] = participacao["mulheres"].fillna(0)
 
     participacao["percentual"] = (
@@ -116,6 +121,7 @@ def mulheresPorCategoria(df):
     return participacao
 
 def mulheresTotal(df):
+    df = pd.DataFrame(df)
     dfMulheres = df.query("genero == 'female'")
 
     total = (
