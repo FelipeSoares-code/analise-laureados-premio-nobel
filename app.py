@@ -5,6 +5,7 @@ import organizar as orgn
 import funcoesGraficos as fg
 import matplotlib.pyplot as plt
 import pandas as pd
+import funcoes as fn
 
 def msg(txt):
     return st.chat_message("assistant").write(txt)
@@ -62,4 +63,18 @@ msg(f"Na categoria {max_categoria} as mulheres representam {percent_total:.2f}% 
 time.sleep(2)
 msg("Vou lhe mostrar um gráfico com a evolução da participação feminina em cada categoria")
 fig = fg.evolucaoMulheresCateg(mulheresCateg)
+st.pyplot(fig)
+
+time.sleep(2)
+democr = orgn.democracias()
+popul = fn.extrairPopulacao()
+correlDemcr = fn.correlDemocrNobel(laureados, democr, popul)
+msg("Analisando os países que já venceram o nobel, eu quis verificar se há alguma correlação entre o número de Nobel per capita de um país com os pontos de democracia que ele possue")
+
+correlNum = correlDemcr['pontos'].corr(correlDemcr['premios_per_capita'])
+correlPosit = True if correlNum > 0 else False
+msg(f"Fazendo o calculo de correlação entre o número de Nobel per capita e os pontos de democracia do país, cheguei a conclusão que a correlação é {"positiva" if correlPosit else "negativa"} em {(correlNum * 100):.2f}%")
+
+msg("Segue o gráfico mostrando a correlação entre nível de democracia de um país e o número de nobel")
+fig = fg.correlDemocrNobel(correlDemcr)
 st.pyplot(fig)
