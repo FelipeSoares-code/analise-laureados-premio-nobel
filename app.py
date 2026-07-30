@@ -10,6 +10,10 @@ import funcoes as fn
 def msg(txt):
     return st.chat_message("assistant").write(txt)
 
+def pause():
+    return time.sleep(0)
+
+
 hora = datetime.now().hour
 
 laureados = orgn.laureados().copy()
@@ -23,30 +27,30 @@ else:
 
 st.title("Análise dos Laureados do Prêmio Nobel")
 
-time.sleep(1)
+pause()
 msg(f"Olá, {saudacao}!")
-time.sleep(1)
+pause()
 msg("Gostaria de compartilhar com você algumas curiosidades sobre os laureados do Prêmio do Nobel")
 
-time.sleep(2)
+pause()
 primeiro_ano = laureados['ano'].min()
 msg(f"O primeiro Prêmio Nobel foi entregue em {primeiro_ano}")
 
-time.sleep(2)
+pause()
 primeiros_vencedores = laureados.query(f"ano == {primeiro_ano}")['nome_completo'].astype(str).tolist()
 msg(f"Os primeiros vencedores foram: {', '.join(primeiros_vencedores)}")
 
-time.sleep(2)
+pause()
 primeira_mulher = laureados.query("genero == 'female'").sort_values("ano").iloc[0]
 msg(f"A primeira mulher vencedora do Prêmio Nobel foi {primeira_mulher['nome_completo']} em {primeira_mulher['ano']}")
 
-time.sleep(2)
+pause()
 msg("Vou lhe mostrar um gráfico mostrando a evolução da participação feminina no Prêmio Nobel")
 totalMulheres = orgn.mulheresTotal(laureados)
 fig = fg.evolucaoTotalMulheres(totalMulheres)
 st.pyplot(fig)
 
-time.sleep(2)
+pause()
 mulheresCateg = orgn.mulheresPorCategoria(laureados)
 listCateg = mulheresCateg['categoria'].unique().tolist()
 categs = {}
@@ -60,21 +64,53 @@ percent_total = (
 msg(f"A categoria com o maior número de laureadas mulheres é: {max_categoria}, com {int(categs[max_categoria])} mulheres no total")
 msg(f"Na categoria {max_categoria} as mulheres representam {percent_total:.2f}% do total de vencedores")
 
-time.sleep(2)
+pause()
 msg("Vou lhe mostrar um gráfico com a evolução da participação feminina em cada categoria")
 fig = fg.evolucaoMulheresCateg(mulheresCateg)
 st.pyplot(fig)
 
-time.sleep(2)
+pause()
 democr = orgn.democracias()
 popul = fn.extrairPopulacao()
-correlDemcr = fn.correlDemocrNobel(laureados, democr, popul)
+correlDemocr = fn.correlDemocrNobel(laureados, democr, popul)
 msg("Analisando os países que já venceram o nobel, eu quis verificar se há alguma correlação entre o número de Nobel per capita de um país com os pontos de democracia que ele possue")
 
-correlNum = correlDemcr['pontos'].corr(correlDemcr['premios_per_capita'])
-correlPosit = True if correlNum > 0 else False
-msg(f"Fazendo o calculo de correlação entre o número de Nobel per capita e os pontos de democracia do país, cheguei a conclusão que a correlação é {"positiva" if correlPosit else "negativa"} em {(correlNum * 100):.2f}%")
+correlDemocrNum = correlDemocr['pontos'].corr(correlDemocr['premios_per_capita'])
+correlPosit = True if correlDemocrNum > 0 else False
+msg(f"Fazendo o calculo de correlação entre o número de Nobel per capita e os pontos de democracia do país, cheguei a conclusão que a correlação é {"positiva" if correlPosit else "negativa"} em {(correlDemocrNum * 100):.2f}%")
 
+pause()
 msg("Segue o gráfico mostrando a correlação entre nível de democracia de um país e o número de nobel")
-fig = fg.correlDemocrNobel(correlDemcr)
+fig = fg.correlDemocrNobel(correlDemocr)
 st.pyplot(fig)
+
+pause()
+msg("Ainda sobre correlações, analisei a correlação entre o IDH do país com a quantidade de Nobel per capita")
+idh = orgn.idh()
+correlIdh = fn.correlIdhNobel(laureados, idh, popul)
+correlIdhNum = correlIdh['idh'].corr(correlDemocr['premios_per_capita'])
+correlPosit = True if correlIdhNum > 0 else False
+msg(f"A correlação é {'positiva' if correlPosit else 'negativa'} em {(correlIdhNum * 100):.2f}%")
+msg("Segue gráfico mostrando a correlação")
+fig = fg.correlIdhNobel(correlIdh)
+st.pyplot(fig)
+
+pause()
+msg("Como ultima análise de correlação, quis verificar a correlação entre o número de laureados de um país com o seu investimento em pesquisa e desenvolvimento(P&D)")
+pesq_desenv = orgn.pesquisaEDesenvolvimento()
+correlPd = fn.correlPD_Nobel(laureados, pesq_desenv, popul)
+correlPdNum = correlPd['pd'].corr(correlPd['premios_per_capita'])
+correlPosit = True if correlPdNum > 0 else False
+msg(f"Pela a análise feita, a correlação é {'positiva' if correlPosit else 'negativa'} em {(correlPdNum * 100):.2f}%")
+msg("Segue gráfico com a correlação")
+fig = fg.correlPD_Nobel(correlPd)
+st.pyplot(fig)
+
+pause()
+msg("Veja a tabela completa com os dados apresentados")
+tab = pd.DataFrame()
+corrNums = [correlDemocrNum, correlIdhNum, correlPdNum]
+tab['Correlação'] = ['Nível de Democracia', 'IDH', 'Investimento em Pesquisa e Desenvolvimento']
+tab['tipo correlação'] = ['positiva' if c > 0 else 'negativa' for c in corrNums]
+tab['% correlação'] = [f'{c * 100:.2f}%' for c in corrNums]
+st.table(tab)
