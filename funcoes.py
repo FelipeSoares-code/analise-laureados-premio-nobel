@@ -22,10 +22,7 @@ def extrairDemocracias():
 
     return df
 
-def correlDemocrNobel(laureados, dadosDemocracia, populacao):
-    laureados  = pd.DataFrame(laureados)
-    dadosDemocracia = pd.DataFrame(dadosDemocracia)
-    populacao = pd.DataFrame(populacao)
+def correlDemocrNobel(laureados : pd.DataFrame, dadosDemocracia : pd.DataFrame, populacao : pd.DataFrame):
 
     laureados_2013_2021 = laureados.query("ano >= 2013 and ano <= 2021").copy()
 
@@ -65,11 +62,9 @@ def correlDemocrNobel(laureados, dadosDemocracia, populacao):
 
     return df
 
-def correlIdhNobel(laureados, idh, populacao):
-    laureados = pd.DataFrame(laureados)
-    idh = pd.DataFrame(idh)
+def correlIdhNobel(laureados : pd.DataFrame, idh : pd.DataFrame, populacao : pd.DataFrame):
 
-    laureados.rename(columns={"pais_nasc": "pais"}, inplace=True)
+    laureados = laureados.rename(columns={"pais_nasc": "pais"})
 
     laureados["pais"] = laureados["pais"].replace({
         "USA": "United States",
@@ -114,11 +109,9 @@ def correlIdhNobel(laureados, idh, populacao):
 
     return df
 
-def correlPD_Nobel(laureados, pd_df, populacao):
-    laureados = pd.DataFrame(laureados)
-    pd_df = pd.DataFrame(pd_df)
+def correlPD_Nobel(laureados : pd.DataFrame, pd_df : pd.DataFrame, populacao : pd.DataFrame):
 
-    laureados.rename(columns={"pais_nasc": "pais"}, inplace=True)
+    laureados = laureados.rename(columns={"pais_nasc": "pais"})
 
     laureados["pais"] = laureados["pais"].replace({
         "USA": "United States",
@@ -190,3 +183,82 @@ def extrairPopulacao():
     dfPop = dfPop.dropna(subset=["populacao"])
 
     return dfPop
+
+def topQuantNobel(laureados : pd.DataFrame, quant : int):
+    laureados["pais_nasc"] = laureados["pais_nasc"].replace({
+        "USA": "United States",
+        "the Netherlands": "Netherlands",
+        "USSR (now Russia)": "Russia",
+        "British Mandate of Palestine (now Israel)": "Israel",
+        "Belgian Congo (now Democratic Republic of the Congo)": "Congo (Kinshasa)",
+        "Scotland": "United Kingdom"
+    })
+    df = (
+        laureados
+        .groupby("pais_nasc")
+        .size()
+        .reset_index(name="Total Laureados")
+        .sort_values("Total Laureados", ascending=False)
+        .head(quant)
+    )
+
+    df = df.rename(columns={"pais_nasc": "País"}).set_index("País")
+    
+    return df
+
+def topNobelPerCapita(laureados : pd.DataFrame, populacao : pd.DataFrame, quant : int):
+    laureados["pais_nasc"] = laureados["pais_nasc"].replace({
+        "USA": "United States",
+        "the Netherlands": "Netherlands",
+        "USSR (now Russia)": "Russia",
+        "British Mandate of Palestine (now Israel)": "Israel",
+        "Belgian Congo (now Democratic Republic of the Congo)": "Congo (Kinshasa)",
+        "Scotland": "United Kingdom"
+    })
+    laureados_renamed = laureados.rename(columns={"pais_nasc": "pais"})
+    
+    nobelPorPais = (
+        laureados_renamed
+        .groupby("pais")
+        .size()
+        .reset_index(name="premios")
+    )
+    
+    populacao_media = populacao.groupby("pais")["populacao"].mean().reset_index()
+    
+    df = nobelPorPais.merge(
+        populacao_media,
+        on="pais",
+        how="left"
+    )
+    
+    # garante tipos numéricos e calcula prêmios por 1 milhão de habitantes
+    df["populacao"] = pd.to_numeric(df["populacao"], errors="coerce")
+    df["premios"] = pd.to_numeric(df["premios"], errors="coerce").fillna(0)
+    df.loc[df["populacao"] == 0, "populacao"] = pd.NA
+    df["per_capita"] = (df["premios"] / df["populacao"]) * 1_000_000
+    
+    df = (
+        df
+        .dropna(subset=["per_capita"])
+        .sort_values("per_capita", ascending=False)
+        .head(quant)
+    )
+    
+    df = df.rename(columns={"pais": "País"})[["País", "premios", "per_capita"]].set_index("País")
+    
+    return df
+
+def topVencedores(laureados : pd.DataFrame):
+    df = (
+        laureados
+        .groupby("nome_completo")
+        .size()
+        .reset_index(name="Quantidade de Prêmios")
+        .query("`Quantidade de Prêmios` > 1")
+        .sort_values("Quantidade de Prêmios", ascending=False)
+    )
+    
+    df = df.rename(columns={"nome_completo": "Nome"}).set_index("Nome")
+    
+    return df

@@ -110,7 +110,30 @@ pause()
 msg("Veja a tabela completa com os dados apresentados")
 tab = pd.DataFrame()
 corrNums = [correlDemocrNum, correlIdhNum, correlPdNum]
-tab['Correlação'] = ['Nível de Democracia', 'IDH', 'Investimento em Pesquisa e Desenvolvimento']
+tab['Correlação com o número de prêmios per capita'] = ['Nível de Democracia', 'IDH', 'Investimento em Pesquisa e Desenvolvimento']
 tab['tipo correlação'] = ['positiva' if c > 0 else 'negativa' for c in corrNums]
 tab['% correlação'] = [f'{c * 100:.2f}%' for c in corrNums]
 st.table(tab)
+
+pause()
+msg("Agora para finalizar a análise, irei apresentar algumas tabelas com informações uteis")
+pause()
+
+msg("Países com mais Prêmios Nobel no total")
+tab = fn.topQuantNobel(laureados, 10)
+st.table(tab)
+
+msg("Países com mais Prêmios Nobel per capita")
+tab = fn.topNobelPerCapita(laureados, popul, 10)
+st.table(tab)
+
+msg("Laureados que receberam mais de um Nobel")
+tab = fn.topVencedores(laureados)
+st.table(tab)
+
+pause()
+msg("Essa foram algumas curiosidades sobre os vencedores do Prêmio Nobel")
+pause()
+msg("Espero que tenha gostado")
+pause()
+msg("Até a próxima!")
