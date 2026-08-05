@@ -4,11 +4,15 @@ from pathlib import Path
 from datetime import datetime
 
 def extrairDfNobel():
-    path = Path(
-        kagglehub.dataset_download("joebeachcapital/nobel-prize")
-    )
-
+    path = Path("./datasets")
     arquivo = path / "nobel-prize-laureates.csv"
+
+    # Só baixa se o CSV ainda não existir
+    if not arquivo.exists():
+        kagglehub.dataset_download(
+            "joebeachcapital/nobel-prize",
+            output_dir=path
+        )
 
     df = pd.read_csv(
         arquivo,

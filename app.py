@@ -132,7 +132,7 @@ tab = fn.topVencedores(laureados)
 st.table(tab)
 
 pause()
-msg("Essa foram algumas curiosidades sobre os vencedores do Prêmio Nobel")
+msg("Estas foram algumas curiosidades sobre os vencedores do Prêmio Nobel")
 pause()
 msg("Espero que tenha gostado")
 pause()
