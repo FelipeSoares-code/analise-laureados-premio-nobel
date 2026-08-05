@@ -11,7 +11,7 @@ def msg(txt):
     return st.chat_message("assistant").write(txt)
 
 def pause():
-    return time.sleep(0)
+    return time.sleep(2)
 
 
 hora = datetime.now().hour
