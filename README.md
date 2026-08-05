@@ -77,6 +77,8 @@ Certifique-se de ter o Python instalado em sua máquina. Recomenda-se o uso de u
    streamlit run app.py
    ```
 
+- **Acesso pela web**: Você pode, também, acessar o app pela web pelo seguinte link do [streamlit](https://laureados-nobel.streamlit.app/)
+   
 ---
 
 ## 📊 Fontes de Dados
