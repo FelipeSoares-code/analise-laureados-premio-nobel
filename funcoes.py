@@ -165,7 +165,8 @@ def extrairPopulacao():
 
     dfPop = wbdata.get_dataframe(
         indicadores,
-        date=(datetime(2013,1,1), datetime(2021,12,31))
+        date=(datetime(2013,1,1), datetime(2021,12,31)),
+        skip_cache=True
     )
 
     dfPop = dfPop.reset_index()
