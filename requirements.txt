@@ -6,6 +6,5 @@ kagglehub>=1.0.2
 kaggle>=2.2
 matplotlib
 seaborn
-wbdata
 streamlit
 

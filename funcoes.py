@@ -1,4 +1,4 @@
-import requests, pandas as pd, kagglehub, organizar as orgn, wbdata
+import requests, pandas as pd, kagglehub, organizar as orgn
 from kagglehub import KaggleDatasetAdapter
 from pathlib import Path
 from datetime import datetime
