@@ -159,32 +159,37 @@ def correlPD_Nobel(laureados : pd.DataFrame, pd_df : pd.DataFrame, populacao : p
     return df
 
 def extrairPopulacao():
-    indicadores = {
-        "SP.POP.TOTL": "populacao"
-    }
-
-    dfPop = wbdata.get_dataframe(
-        indicadores,
-        date=(datetime(2013,1,1), datetime(2021,12,31)),
-        skip_cache=True
+    url = (
+        "https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL"
+        "?format=json"
+        "&date=2013:2021"
+        "&per_page=20000"
     )
 
-    dfPop = dfPop.reset_index()
+    resposta = requests.get(url)
+    resposta.raise_for_status()
 
-    # Extrai apenas o nome do país (string) caso venha como objeto/lista
-    dfPop["country"] = dfPop["country"].apply(
-        lambda x: x["value"] if isinstance(x, dict)
-        else (x[0] if isinstance(x, list) else str(x))
-    )
+    dados = resposta.json()[1]
+
+    dfPop = pd.DataFrame(dados)
+
+    dfPop = dfPop[
+        ["country", "date", "value"]
+    ]
 
     dfPop.rename(columns={
         "country": "pais",
-        "date": "ano"
+        "date": "ano",
+        "value": "populacao"
     }, inplace=True)
+
+    dfPop["pais"] = dfPop["pais"].apply(
+        lambda x: x["value"] if isinstance(x, dict) else str(x)
+    )
 
     dfPop["ano"] = dfPop["ano"].astype(int)
 
-    # Remove agregados regionais do Banco Mundial (ex: "World", "Europe & Central Asia")
+    # Remove registros sem população
     dfPop = dfPop.dropna(subset=["populacao"])
 
     return dfPop

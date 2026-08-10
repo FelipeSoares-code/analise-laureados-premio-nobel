@@ -77,7 +77,7 @@ msg("Analisando os países que já venceram o nobel, eu quis verificar se há al
 
 correlDemocrNum = correlDemocr['pontos'].corr(correlDemocr['premios_per_capita'])
 correlPosit = True if correlDemocrNum > 0 else False
-msg(f"Fazendo o calculo de correlação entre o número de Nobel per capita e os pontos de democracia do país, cheguei a conclusão que a correlação é {"positiva" if correlPosit else "negativa"} em {(correlDemocrNum * 100):.2f}%")
+msg(f"Fazendo o calculo de correlação entre o número de Nobel per capita e os pontos de democracia do país, cheguei a conclusão que a correlação é {'positiva' if correlPosit else 'negativa'} em {(correlDemocrNum * 100):.2f}%")
 
 pause()
 msg("Segue o gráfico mostrando a correlação entre nível de democracia de um país e o número de nobel")
